@@ -1,0 +1,13 @@
+<ion-toolbar class="toolbar-style">
+  <ion-title slot="start">
+    {{ book }} {{ chapter }}
+  </ion-title>
+</ion-toolbar>
+<ion-content>
+  <ng-container *ngFor="let item of data">
+    <lib-bible-verse [verse]="item"></lib-bible-verse>
+  </ng-container>
+  <div class="button-container">
+    
+  </div>
+</ion-content>
