@@ -5,13 +5,15 @@ import { BibleLibComponent } from './bible-lib.component';
 import { HttpClientModule } from '@angular/common/http';
 import { IonicModule } from '@ionic/angular';
 import { BibleVerseComponent } from './bible-verse/bible-verse.component';
+import { ScrollVanishDirective } from './directives/scroll-vanish.directive';
 
 
 
 @NgModule({
   declarations: [
     BibleLibComponent,
-    BibleVerseComponent
+    BibleVerseComponent,
+    ScrollVanishDirective
   ],
   imports: [
     CommonModule,

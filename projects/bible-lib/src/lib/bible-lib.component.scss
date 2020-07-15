@@ -10,6 +10,12 @@
 
     ion-fab {
         position: fixed;
-        bottom: 10%;
+        bottom: 5%;
+        margin: 0px 10%;
+
+        ion-fab-button {
+            width: 45px !important;
+            height: 45px !important;
+        }
     }
 }
