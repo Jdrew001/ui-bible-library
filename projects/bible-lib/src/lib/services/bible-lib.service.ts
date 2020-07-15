@@ -12,7 +12,7 @@ export class BibleLibService {
   private oldBooks = BibleConstant.OLD_TESTAMENT_BOOKS;
   private newBooks = BibleConstant.NEW_TESTAMENT_BOOKS;
   private bible: Array<BibleModel> = BibleConstant.BIBLE_REFERENCES;
-  private defaultBook = 'Matthew';
+  private defaultBook = 'Genesis';
   private defaultChapter = 1;
 
   constructor(private http: HttpClient) { }
