@@ -5,3 +5,11 @@
 .button-container {
     height: 25%;
 }
+
+.action-buttons {
+
+    ion-fab {
+        position: fixed;
+        bottom: 10%;
+    }
+}

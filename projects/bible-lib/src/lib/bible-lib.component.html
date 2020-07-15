@@ -3,10 +3,22 @@
     {{ book }} {{ chapter }}
   </ion-title>
 </ion-toolbar>
-<ion-content>
+<ion-content #content>
   <ng-container *ngFor="let item of data">
     <lib-bible-verse [verse]="item"></lib-bible-verse>
   </ng-container>
+  <div class="action-buttons">
+    <ion-fab *ngIf="!disableBackAction()" vertical="bottom" horizontal="start" (click)="previousChapter()">
+      <ion-fab-button>
+        <ion-icon name="arrow-back-circle"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
+    <ion-fab *ngIf="!disableForwardAction()" vertical="bottom" horizontal="end" (click)="nextChapter()">
+      <ion-fab-button>
+        <ion-icon name="arrow-forward-circle"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
+  </div>
   <div class="button-container">
     
   </div>

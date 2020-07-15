@@ -42,6 +42,18 @@ export class BibleLibService {
     return of({book: book, chapter: chapter, bible: this.filterToItem(book, chapter, verse)});
   }
 
+  getBooks(): string[] {
+    let books = this.bible.map(x => x.book_name);
+    return [...new Set(books)];
+  }
+
+  getBookChapters(book: string): number[] {
+    let tempBible = this.bible.filter(x => x.book_name === book);
+    let chapters = [...new Set(tempBible.map(x => x.chapter))];
+
+    return chapters;
+  }
+
   private getAllBooks() {
     return [this.oldBooks, this.newBooks];
   }
