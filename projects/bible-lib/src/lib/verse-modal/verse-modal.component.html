@@ -1,0 +1,24 @@
+<ion-toolbar class="toolbar-style">
+  <ion-title slot="start">
+    {{ book }} {{ chapter }}
+  </ion-title>
+  <ion-buttons slot="end">
+    <ion-button color="primary" (click)="closeModal()">
+      <ion-icon name="close-outline"></ion-icon>
+    </ion-button>
+  </ion-buttons>
+</ion-toolbar>
+<ion-content>
+  <!-- Default Segment -->
+  <ion-segment mode="md" (ionChange)="segmentChanged($event)">
+    <ion-segment-button value="book">
+      <ion-label>Book</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="chapter">
+      <ion-label>Chapter</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="verse">
+      <ion-label>Verse</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+</ion-content>

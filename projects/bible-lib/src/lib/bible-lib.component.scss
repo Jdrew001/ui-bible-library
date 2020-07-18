@@ -6,6 +6,13 @@
     height: 25%;
 }
 
+ion-title {
+    ion-icon {
+        position: relative;
+        top: 2px;
+    }
+}
+
 .action-buttons {
 
     ion-fab {

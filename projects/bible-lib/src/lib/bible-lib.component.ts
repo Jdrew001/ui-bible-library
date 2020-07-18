@@ -1,7 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { BibleLibService } from './services/bible-lib.service';
 import { Testament, BibleModel, OldTestamentBook, NewTestamentBook } from './models/bible.model';
-import { IonContent } from '@ionic/angular';
+import { IonContent, ModalController } from '@ionic/angular';
+import { VerseModalComponent } from './verse-modal/verse-modal.component';
 
 @Component({
   selector: 'bible-component',
@@ -23,7 +24,9 @@ export class BibleLibComponent implements OnInit {
   books: string[];
   chapters: number[];
 
-  constructor(private bibleLibService: BibleLibService) { }
+  constructor(
+    private bibleLibService: BibleLibService,
+    private modalController: ModalController) { }
 
   ngOnInit() {
     this.books = this.bibleLibService.getBooks();
@@ -41,7 +44,16 @@ export class BibleLibComponent implements OnInit {
       this.data = result['bible'];
       this.book = result['book']
       this.chapter = result['chapter'];
+      this.updateBibleState();
     });
+  }
+
+  async openVerseModal(e){
+    const modal = await this.modalController.create({
+      component: VerseModalComponent,
+      cssClass: 'my-custom-class'
+    });
+    return await modal.present();
   }
 
   nextChapter() {
@@ -54,6 +66,8 @@ export class BibleLibComponent implements OnInit {
     } else {
       this.chapter++;
     }
+    
+    this.updateBibleState();
     this.bibleLibService.retrieveBibleReference(this.book, this.chapter).subscribe(result => {
       this.content.scrollToTop(1);
       this.data = result['bible'];
@@ -65,6 +79,7 @@ export class BibleLibComponent implements OnInit {
   previousChapter() {
     if (this.validateBackAction()) {
       this.chapter--;
+      this.updateBibleState();
       this.bibleLibService.retrieveBibleReference(this.book, this.chapter).subscribe(result => {
         this.content.scrollToTop(1);
         this.data = result['bible'];
@@ -84,10 +99,15 @@ export class BibleLibComponent implements OnInit {
 
   disableForwardAction() {
     let res = false;
-    // if (this.book === this.firstBook && this.chapter == 1) {
-    //       res = true;
-    // }
     return res;
+  }
+
+  private updateBibleState() {
+    let obj = {
+      book: this.book,
+      chapter: this.chapter
+    };
+    this.bibleLibService.emitCurrentBibleState(obj);
   }
 
   private validateForNextBook(book) {
@@ -117,21 +137,4 @@ export class BibleLibComponent implements OnInit {
 
     return res;
   }
-
-  private findBookOfBible(book): OldTestamentBook | NewTestamentBook {
-    let oldItem = this.oldT.find(x => x.titles.english === book) as OldTestamentBook;
-    let newItem = this.newT.find(x => x.titles.english === book) as NewTestamentBook;
-
-    if (oldItem) {
-      this.isOldTest = true;
-      this.isNewTest = false;
-    }
-    if (newItem) {
-      this.isOldTest = false;
-      this.isNewTest = true;
-    }
-
-    return oldItem || newItem;
-  }
-
 }

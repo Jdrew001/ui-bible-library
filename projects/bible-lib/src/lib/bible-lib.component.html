@@ -1,5 +1,5 @@
 <ion-toolbar class="toolbar-style" [libScrollVanish]="content">
-  <ion-title slot="start">
+  <ion-title slot="start" (click)="openVerseModal($event)">
     {{ book }} {{ chapter }}
     <span>
       <ion-icon name="caret-down-outline"></ion-icon>

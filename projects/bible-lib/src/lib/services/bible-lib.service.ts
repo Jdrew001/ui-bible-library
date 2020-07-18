@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Testament, BibleModel } from '../models/bible.model';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { BibleConstant } from '../bible-lib.constant';
-import { combineLatest, Subject, Observable, of } from 'rxjs';
+import { combineLatest, Subject, Observable, of, BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +14,10 @@ export class BibleLibService {
   private bible: Array<BibleModel> = BibleConstant.BIBLE_REFERENCES;
   private defaultBook = 'Genesis';
   private defaultChapter = 1;
+  private currentBibleState$: BehaviorSubject<{book: string, chapter: number, verse?: number}>
+    = new BehaviorSubject<{book: string, chapter: number, verse?: number}>(null);
+
+  get CurrentBibleState$() { return this.currentBibleState$; }
 
   constructor(private http: HttpClient) { }
 
@@ -36,6 +40,10 @@ export class BibleLibService {
     }
 
     return of(resSub);
+  }
+
+  emitCurrentBibleState(value: {book: string, chapter: number, verse?: number}) {
+    this.CurrentBibleState$.next(value);
   }
 
   retrieveBibleReference(book: string = this.defaultBook, chapter: number = this.defaultChapter, verse?: number) {

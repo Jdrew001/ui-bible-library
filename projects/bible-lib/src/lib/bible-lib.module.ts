@@ -6,6 +6,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { IonicModule } from '@ionic/angular';
 import { BibleVerseComponent } from './bible-verse/bible-verse.component';
 import { ScrollVanishDirective } from './directives/scroll-vanish.directive';
+import { VerseModalComponent } from './verse-modal/verse-modal.component';
 
 
 
@@ -13,7 +14,8 @@ import { ScrollVanishDirective } from './directives/scroll-vanish.directive';
   declarations: [
     BibleLibComponent,
     BibleVerseComponent,
-    ScrollVanishDirective
+    ScrollVanishDirective,
+    VerseModalComponent
   ],
   imports: [
     CommonModule,
