@@ -1,5 +1,5 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { ModalController, IonSlides } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { BibleLibService } from '../services/bible-lib.service';
 
@@ -10,6 +10,7 @@ import { BibleLibService } from '../services/bible-lib.service';
 })
 export class VerseModalComponent implements OnInit, OnDestroy {
 
+  @ViewChild('slides', { static: true }) slider: IonSlides;
   bibleSubscription: Subscription;
   bookList: Array<string>;
   bookChapters: Array<number>;
@@ -17,6 +18,13 @@ export class VerseModalComponent implements OnInit, OnDestroy {
   book: string;
   chapter: number;
   verse: number;
+  segments = [{name: 'Books', value: 0}, {name: 'Chapters', value: 1}, {name: 'Verses', value: 2}];
+  segment = 0;
+  view;
+  options = {
+    autoHeight: true,
+    allowTouchMove: false
+  }
 
   constructor(
     private bibleService: BibleLibService,
@@ -38,8 +46,17 @@ export class VerseModalComponent implements OnInit, OnDestroy {
     });
   }
 
-  segmentChanged(e) {
+  segmentChanged() {
+    this.slider.slideTo(this.segment, 500);
+  }
 
+  async slideChanged() {
+    this.segment = await this.slider.getActiveIndex();
+    this.view = this.segment;
+  }
+
+  selectBook(book) {
+    console.log(book);
   }
 
   closeModal() {

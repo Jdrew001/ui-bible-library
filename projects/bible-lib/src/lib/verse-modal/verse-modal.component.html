@@ -8,17 +8,39 @@
     </ion-button>
   </ion-buttons>
 </ion-toolbar>
-<ion-content>
-  <!-- Default Segment -->
-  <ion-segment mode="md" (ionChange)="segmentChanged($event)">
-    <ion-segment-button value="book">
-      <ion-label>Book</ion-label>
-    </ion-segment-button>
-    <ion-segment-button value="chapter">
-      <ion-label>Chapter</ion-label>
-    </ion-segment-button>
-    <ion-segment-button value="verse">
-      <ion-label>Verse</ion-label>
+<ion-toolbar>
+<!-- Default Segment -->
+  <ion-segment mode="md" (ionChange)="segmentChanged()" [(ngModel)]="segment">
+    <ion-segment-button *ngFor="let val of segments" [value]="val.value">
+      <ion-label>{{ val.name }}</ion-label>
     </ion-segment-button>
   </ion-segment>
+</ion-toolbar>
+<ion-content>
+  <ion-slides #slides [options]="options" (ionSlideDidChange)="slideChanged()">
+    <ion-slide (resized)="slides.update()">
+      <ng-container style="width: 100%">
+        <ion-list lines="none">
+          <ion-item class="ion-activatable ripple-parent" *ngFor="let item of bookList" (click)="selectBook(item)">
+            <ion-label>
+              {{ item }}
+            </ion-label>
+            <ion-ripple-effect></ion-ripple-effect>
+          </ion-item>
+        </ion-list>
+      </ng-container>
+    </ion-slide>
+
+    <ion-slide (resized)="slides.update()">
+      <ng-container>
+        <p>Cahpters</p>
+      </ng-container>
+    </ion-slide>
+
+    <ion-slide (resized)="slides.update()">
+      <ng-container style="width: 100%">
+        <p>verses</p>
+      </ng-container>
+    </ion-slide>
+  </ion-slides>
 </ion-content>

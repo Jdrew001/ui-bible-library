@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { BibleVerseComponent } from './bible-verse/bible-verse.component';
 import { ScrollVanishDirective } from './directives/scroll-vanish.directive';
 import { VerseModalComponent } from './verse-modal/verse-modal.component';
+import { FormsModule } from '@angular/forms';
 
 
 
@@ -20,7 +21,8 @@ import { VerseModalComponent } from './verse-modal/verse-modal.component';
   imports: [
     CommonModule,
     HttpClientModule,
-    IonicModule.forRoot()
+    FormsModule,
+    IonicModule
   ],
   providers: [
     BibleLibService
