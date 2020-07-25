@@ -3,9 +3,15 @@
     {{ book }} {{ chapter }}
   </ion-title>
   <ion-buttons slot="end">
-    <ion-button color="primary" (click)="closeModal()">
-      <ion-icon name="close-outline"></ion-icon>
+    <ion-button color="primary" (click)="closeAndUpdate()">
+      <ion-icon name="checkmark-outline"></ion-icon>
     </ion-button>
+
+    <ion-buttons slot="end">
+      <ion-button color="primary" (click)="closeModal()">
+        <ion-icon name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-buttons>
 </ion-toolbar>
 <ion-toolbar>
@@ -21,7 +27,7 @@
     <ion-slide (resized)="slides.update()">
       <ng-container style="width: 100%">
         <ion-list lines="none">
-          <ion-item class="ion-activatable ripple-parent" *ngFor="let item of bookList" (click)="selectBook(item)">
+          <ion-item class="ion-activatable ripple-parent" *ngFor="let item of bookList" (click)="selectItem(item, 'book')">
             <ion-label>
               {{ item }}
             </ion-label>

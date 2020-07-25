@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { BibleLibService } from './services/bible-lib.service';
 import { Testament, BibleModel, OldTestamentBook, NewTestamentBook } from './models/bible.model';
 import { IonContent, ModalController } from '@ionic/angular';
@@ -13,8 +13,8 @@ export class BibleLibComponent implements OnInit {
 
   @ViewChild('content') content: IonContent;
   data: BibleModel[];
-  book: string;
-  chapter: number;
+  book: string = '';
+  chapter: number = 0;
   oldT: OldTestamentBook[];
   newT: NewTestamentBook[];
   firstBook: string = 'Genesis';
@@ -24,27 +24,32 @@ export class BibleLibComponent implements OnInit {
   books: string[];
   chapters: number[];
 
+  @Input('environment')
+  set environment(value: string) {
+    console.log('setter', value);
+    this.bibleLibService.Environment = value;
+  }
+
   constructor(
     private bibleLibService: BibleLibService,
     private modalController: ModalController) { }
 
   ngOnInit() {
-    this.books = this.bibleLibService.getBooks();
-    this.chapters = this.bibleLibService.getBookChapters(this.firstBook);
-    this.bibleLibService.retrieveBooks(Testament.All).subscribe(result => {
-      this.oldT = result[0] as OldTestamentBook[];
-      this.newT = result[1] as NewTestamentBook[];
-    });
+    this.bibleLibService.retrieveBibleReference();
     this.loadInit();
   }
 
   loadInit() {
-    this.bibleLibService.retrieveBibleReference().subscribe(result => {
-      console.log(result);
-      this.data = result['bible'];
-      this.book = result['book']
-      this.chapter = result['chapter'];
-      this.updateBibleState();
+    this.bibleLibService.DataObject$.subscribe(result => {
+      if (result.length > 0) {
+        this.data = result;
+        this.book = this.bibleLibService.getBook(result);
+        this.chapter = this.bibleLibService.getChapter(result);
+      }
+    });
+
+    this.bibleLibService.CurrentBibleState$.subscribe(value => {
+      this.bibleLibService.retrieveBibleReference(value['book'], value['chapter']);
     });
   }
 
@@ -68,24 +73,16 @@ export class BibleLibComponent implements OnInit {
     }
     
     this.updateBibleState();
-    this.bibleLibService.retrieveBibleReference(this.book, this.chapter).subscribe(result => {
-      this.content.scrollToTop(1);
-      this.data = result['bible'];
-      this.book = result['book']
-      this.chapter = result['chapter'];
-    });
+    this.bibleLibService.retrieveBibleReference(this.book, this.chapter);
+    this.content.scrollToTop(1);
   }
 
   previousChapter() {
     if (this.validateBackAction()) {
       this.chapter--;
       this.updateBibleState();
-      this.bibleLibService.retrieveBibleReference(this.book, this.chapter).subscribe(result => {
-        this.content.scrollToTop(1);
-        this.data = result['bible'];
-        this.book = result['book']
-        this.chapter = result['chapter'];
-      });
+      this.bibleLibService.retrieveBibleReference(this.book, this.chapter);
+      this.content.scrollToTop(1);
     }
   }
 

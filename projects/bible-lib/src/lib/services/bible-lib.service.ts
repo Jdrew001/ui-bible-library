@@ -11,13 +11,19 @@ export class BibleLibService {
 
   private oldBooks = BibleConstant.OLD_TESTAMENT_BOOKS;
   private newBooks = BibleConstant.NEW_TESTAMENT_BOOKS;
-  private bible: Array<BibleModel> = BibleConstant.BIBLE_REFERENCES;
+  private bible: Array<BibleModel> = [];
+  private environment: string;
   private defaultBook = 'Genesis';
   private defaultChapter = 1;
+  private data$: BehaviorSubject<Array<BibleModel>> = new BehaviorSubject<Array<BibleModel>>([]);
   private currentBibleState$: BehaviorSubject<{book: string, chapter: number, verse?: number}>
     = new BehaviorSubject<{book: string, chapter: number, verse?: number}>(null);
 
   get CurrentBibleState$() { return this.currentBibleState$; }
+  get DataObject$() { return this.data$; }
+  get Bible() { return this.bible; }
+  set Bible(data: Array<BibleModel>) { this.bible = data; }
+  set Environment(val: string) { this.environment = val; }
 
   constructor(private http: HttpClient) { }
 
@@ -47,7 +53,18 @@ export class BibleLibService {
   }
 
   retrieveBibleReference(book: string = this.defaultBook, chapter: number = this.defaultChapter, verse?: number) {
-    return of({book: book, chapter: chapter, bible: this.filterToItem(book, chapter, verse)});
+    const url = `${this.environment}bibles?book_name=${book}&chapter=${chapter}`;
+    this.http.get<Array<BibleModel>>(url).subscribe(res => this.data$.next(res));
+  }
+
+  getBook(data): string {
+    let book = data.map(x => x.book_name);
+    return [...new Set(book)][0] as string;
+  }
+
+  getChapter(data): number {
+    let cha = data.map(x => x.chapter);
+    return [...new Set(cha)][0] as number;
   }
 
   getBooks(): string[] {

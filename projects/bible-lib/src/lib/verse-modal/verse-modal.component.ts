@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, Output, EventEmitter } from '@angular/core';
 import { ModalController, IonSlides } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { BibleLibService } from '../services/bible-lib.service';
@@ -11,6 +11,7 @@ import { BibleLibService } from '../services/bible-lib.service';
 export class VerseModalComponent implements OnInit, OnDestroy {
 
   @ViewChild('slides', { static: true }) slider: IonSlides;
+  @Output('updateBible') updateBible: EventEmitter<{book?: string, chapter?: number, verse?: number}> = new EventEmitter();
   bibleSubscription: Subscription;
   bookList: Array<string>;
   bookChapters: Array<number>;
@@ -50,17 +51,39 @@ export class VerseModalComponent implements OnInit, OnDestroy {
     this.slider.slideTo(this.segment, 500);
   }
 
-  async slideChanged() {
-    this.segment = await this.slider.getActiveIndex();
-    this.view = this.segment;
+  slideChanged() {
+    this.slider.getActiveIndex().then(res => {
+      this.segment = res;
+      this.view = this.segment;
+    });
   }
 
-  selectBook(book) {
-    console.log(book);
+  selectItem(item, type) {
+    switch (type) {
+      case 'book':
+        this.book = item;
+        this.segment = 1;
+      break;
+      case 'chapter':
+        this.chapter = item;
+        this.segment = 2;
+      break;
+      case 'verse':
+        this.verse = item;
+        // TODO: Need to close and update parent
+      break;
+    }
   }
 
   closeModal() {
+    this.segment = 0;
+    this.view = null;
     this.modalController.dismiss();
+  }
+
+  closeAndUpdate() {
+    this.bibleService.CurrentBibleState$.next({book: this.book, chapter: this.chapter, verse: this.verse});
+    this.closeModal();
   }
 
   ngOnDestroy() {
